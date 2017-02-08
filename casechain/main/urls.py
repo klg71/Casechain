@@ -5,6 +5,7 @@ from . import views
 mainView=views.CaseViews()
 
 urlpatterns = [
-        url(r'^([0-9]+)/$', mainView.viewCase),
+        url(r'^$', mainView.viewCase),
+        url(r'^hash/$', mainView.addCase),
 ]
 

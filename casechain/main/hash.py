@@ -1,6 +1,10 @@
 from . import models
 import hashlib
 from .models import Verdict
+from .models import Fact
+from .models import Consenus
+from .models import View
+from .models import StatementOfFacts
 
 def calculateHash (case_id):
 
@@ -10,7 +14,7 @@ def calculateHash (case_id):
     # create sha256 object
     hash = hashlib.sha256()
     # insert hash of data
-    hash.update(bytes(repr(case.date), "utf-8"))
+    hash.update(bytes(caseToString(case), "utf-8"))
 
     print(hash.hexdigest())
 
@@ -18,17 +22,55 @@ def calculateHash (case_id):
 
 def caseToString (case):
 
-    case_as_string = repr(case.date) + repr(case.court) + repr(case.plaintiff) + repr(case.defendant) + repr(case.hash)\
-                     + repr(case.nonce)
+    case_as_string = repr(case.date) + repr(case.court) + repr(case.plaintiff) + repr(case.defendant) + repr(case.nonce)\
+                     + factsToString(case) + consensusesToString(case) + viewsToString(case) +\
+                     verdictToString(case)
 
+    print(case_as_string)
 
     return case_as_string
 
+def factsToString (case):
+    sof = StatementOfFacts.objects.get(case=case.id)
+    facts = Fact.objects.filter(statementOfFacts=sof.id)
+    fact_string = ""
+    for fact in facts:
+        fact_string= fact_string + fact.fact +'\n'
+
+    return fact_string
+
+def consensusesToString (case):
+    sof = StatementOfFacts.objects.get(case=case.id)
+    consensuses = Consenus.objects.filter(statementOfFacts=sof.id)
+    consensus_string = ""
+    for consensus in consensuses:
+        consensus_string= consensus_string + consensus.opinion +'\n'
+
+    return consensus_string
+
+def viewsToString (case):
+    sof = StatementOfFacts.objects.get(case=case.id)
+    views = View.objects.filter(statementOfFacts=case.id)
+    plaintiff_string = ""
+    defendant_string = ""
+    for view in views:
+        if view.viewer_types == "plaintiff":
+            plaintiff_string = plaintiff_string + view.view +'\n'
+        else:
+            defendant_string = defendant_string + view.view +'\n'
+
+    view_string = plaintiff_string + defendant_string
+
+    return view_string
+
 def verdictToString (case):
     verdicts = Verdict.objects.filter(case=case.id)
-    #for verdict in verdicts:
-        #if verdict.verdict_type
+    verdict_string = ""
+    for verdict in verdicts:
+        if verdict.verdict_type == "intermediate":
+            verdict_string = verdict_string + verdict.text +'\n'
+        else:
+            end = verdict.text
 
-
-    string="test"
-    return string
+    verdict_string = verdict_string +  end
+    return verdict_string

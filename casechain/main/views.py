@@ -1,9 +1,11 @@
 from django.shortcuts import render
+from django.http.response import HttpResponse
 from . import models
 from . import hash
 import hashlib
 import json
 from django.http.response import HttpResponse
+from . import json_export
 
 
 # Create your views here.
@@ -25,7 +27,8 @@ class CaseViews:
         """
         Adds a new case to the chain
         """
-        pass
+        return HttpResponse(json_export.exportCase(1))
+        #pass
 
     def receiveCase(self,request):
         """
