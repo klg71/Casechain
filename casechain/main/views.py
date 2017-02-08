@@ -48,6 +48,14 @@ class CaseViews:
             if string(hashLib.calculateHash(case)) != string(caseJson['hashValue']):
                 error="sha256 hash incorrect"
                 return HttpResponse(json.dumps({'error':error}))
+    
+
+    def __checkCase(self,case_id):
+        cases=Case.objects.filter(id<=case_id)
+        for case in cases:
+            if case.hash != hash.calculateHash(case_id):
+                return False
+
 
 
     def __createHashValue(self,caseId):
