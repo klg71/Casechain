@@ -1,0 +1,51 @@
+$spacing-steps: 10;
+
+
+@mixin spacing($property, $value, $unit, $option: null, $screen: null) {
+  .#{$property}#{if($option, -$option , '')}#{if($screen, -$screen , '')}#{if($value == 1, '' , -$value)} {
+    #{$property}#{if($option, -$option , '')}: #{$value}#{$unit} !important;
+  }
+}
+
+
+// basic margin and padding
+@each $edge in top, right, bottom, left {
+  @for $i from 1 through $spacing-steps {
+    @include spacing(margin, $i, rem, $edge);
+  }
+  .no-margin-#{$edge} { margin-#{$edge}: 0 !important; }
+  @for $i from 1 through $spacing-steps {
+    @include spacing(padding, $i, rem, $edge);
+  }
+  .no-padding-#{$edge} { padding-#{$edge}: 0 !important; }
+}
+
+// responsive margin and padding for sm, md, lg
+@each $screen in (sm, map-get($grid-breakpoints, sm)), (md, map-get($grid-breakpoints, md)), (lg, map-get($grid-breakpoints, lg)) {
+  @media (min-width: #{nth($screen,2)}) {
+    @each $edge in top, right, bottom, left {
+
+      @for $i from 1 through $spacing-steps {
+        @include spacing(margin, $i, rem, $edge, nth($screen, 1));
+      }
+      .no-margin-#{$edge}-#{nth($screen, 1)} { margin-#{$edge}: 0 !important; }
+
+      @for $i from 1 through $spacing-steps {
+        @include spacing(padding, $i, rem, $edge, nth($screen, 1));
+      }
+      .no-padding-#{$edge}-#{nth($screen, 1)} { padding-#{$edge}: 0 !important; }
+    }
+  }
+}
+
+.no-margin { margin: 0 !important; }
+.no-margin-left { margin-left: 0 !important; }
+.no-margin-right { margin-right: 0 !important; }
+.no-margin-top { margin-top: 0 !important; }
+.no-margin-bottom { margin-bottom: 0 !important; }
+
+.no-padding { padding: 0 !important; }
+.no-padding-left { padding-left: 0 !important; }
+.no-padding-right { padding-right: 0 !important; }
+.no-padding-top { padding-top: 0 !important; }
+.no-padding-bottom { padding-bottom: 0 !important; }
