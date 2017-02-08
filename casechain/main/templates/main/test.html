@@ -1,0 +1,15 @@
+<h1>{{ case.caseFile }}</h1>
+Plaintiff: {{ case.plaintiff }} - View:
+{% for view in views %}
+ {% if view.viewer == "pl" %}
+    {{ view.view }}
+ {% endif %}
+{% endfor %}
+<br>
+Defendant: {{ case.defendant }} - View:
+{% for view in views %}
+ {% if view.viewer == "df" %}
+    {{ view.view }}
+ {% endif %}
+{% endfor %}
+<br>
