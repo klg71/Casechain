@@ -19,6 +19,7 @@ class Verdict(models.Model):
     #enum field mit End, Zwischen
     verdict_type=models.CharField(max_length=20,choices=verdict_types)
     text=models.CharField(max_length=1000)
+    case=models.ForeignKey('Case')
 
 
 class StatementOfFacts(models.Model):
