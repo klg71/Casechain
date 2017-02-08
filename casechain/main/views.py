@@ -21,7 +21,7 @@ class CaseViews:
         factList = models.Fact.objects.filter(statementOfFacts_id=statementOfFactsId)
         viewList = models.View.objects.filter(statementOfFacts_id=statementOfFactsId)
         consensusList = models.Consenus.objects.filter(statementOfFacts_id=statementOfFactsId)
-        return render(request,'main/test.html',{
+        return render(request,'main/item.html',{
             'case': case,
             'verdicts': verdictList,
             'views': viewList,
@@ -47,7 +47,7 @@ class CaseViews:
         #   hashValue= get that shit
         #   preHashValue= get that shit as well
         #   nonce = get that shit also
-        )
+        # )
         return render(request,'main/item.html')
 
     def receiveCase(self,request):
