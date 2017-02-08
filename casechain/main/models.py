@@ -9,6 +9,7 @@ class Case(models.Model):
     defendant = models.CharField(max_length=100)
     hashValue=models.CharField(max_length=100)
     prevHashValue=models.CharField(max_length=100)
+    caseFile=models.CharField(max_length=100)
     nonce=models.CharField(max_length=5)
 
 class Verdict(models.Model):
