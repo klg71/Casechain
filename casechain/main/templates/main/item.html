@@ -1,1 +1,24 @@
+{% extends "main/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="col-sm-12">
+
+	<h1>Datum / Gericht / Aktzenzeichen</h1>
+
+
+-
+{{ verdicts }}
+-
 {{ case.plaintiff }}
+
+
+</div>
+
+<div class="col-sm-12 margin-top-2 margin-bottom-2">
+	<a href=".." class="btn btn-primary">zurück</a>
+</div>
+
+{% endblock content %}
