@@ -1,138 +1,33 @@
+{% extends "main/base.html" %}
+
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<link rel="icon" href="../../favicon.ico">
 
-	<title>Dashboard Template for Bootstrap</title>
+{% block content %}
+<div class="col-sm-12">
 
-	<!-- Custom styles for this template -->
-	<link href="{% static  "main/css/application.css" %}" rel="stylesheet">
-	<link rel="stylesheet" href="{% static  "main/css/font-awesome.min.css" %}">
-</head>
+	<h1 class="margin-bottom-3">CaseDashboard</h1>
+	<table class="table table-sm table-hover table-striped">
+		<thead>
+			<tr>
+				<th>Datum</th>
+				<th>Gericht</th>
+				<th>Aktenzeichen</th>
+				<th class="text-center">BlockStatus</th>
+			</tr>
+		</thead>
+		<tbody>
 
-<body>
+			{% for case in cases %}
+			<tr>
+				<td>{{ case.date }}</td>
+				<td>{{ case.court }}</td>
+				<td><a href="./{{ case.id }}">{{ case.file }} AZ</a></td>
+				<td class="text-center"><i class="fa fa-chain text-success"></i>/<i class="fa fa-chain-broken text-danger"></i></td>
+			</tr>
+			{% endfor %}
 
-<div class="container">
-	<div class="header clearfix">
-		<nav>
-			<ul class="nav nav-pills float-right">
-				<li class="nav-item">
-					<a class="nav-link active" href="#"><i class="fa fa-home"></i> Dashboard</a>
-				</li>
-				<!--
-				<li class="nav-item">
-					<a class="nav-link" href="#">About</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Contact</a>
-				</li>
-				-->
-			</ul>
-		</nav>
-		<img class="logo" src="{% static  "main/img/casechain_logo.png" %}" />
-	</div>
-
-	<!--
-	<div class="jumbotron">
-		<h1 class="display-3">Jumbotron heading</h1>
-		<p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-		<p><a class="btn btn-lg btn-success" href="#" role="button">Sign up today</a></p>
-	</div>
-	-->
-
-	<div class="row">
-		<div class="col-sm-12">
-
-			<h1 class="margin-bottom-3">CaseDashboard</h1>
-
-			{{ case.plaintiff }}
-
-			<table class="table table-sm table-hover table-striped">
-  <ul>
-    {% for case in cases %}
-      <li>
-        {{ case.id }} {{ case.plaintiff }}
-      </li>
-    {% endfor %}
-  </ul>
-
-
-
-				<thead>
-					<tr>
-						<th>Datum</th>
-						<th>Gericht</th>
-						<th>Aktenzeichen</th>
-						<th class="text-center">BlockStatus</th>
-					</tr>
-				</thead>
-
-				<tbody>
-					<tr>
-						<td>01.01.17</td>
-						<td>Gericht</td>
-						<td><a href="">Aktenzeichen</a></td>
-						<td class="text-center"><i class="fa fa-check"></i></td>
-					</tr>
-					<tr>
-						<td>01.01.17</td>
-						<td>Gericht</td>
-						<td><a href="">Aktenzeichen</a></td>
-						<td class="text-center"><i class="fa fa-check"></i></td>
-					</tr>
-					<tr>
-						<td>01.01.17</td>
-						<td>Gericht</td>
-						<td><a href="">Aktenzeichen</a></td>
-						<td class="text-center"><i class="fa fa-check"></i></td>
-					</tr>
-					<tr>
-						<td>01.01.17</td>
-						<td>Gericht</td>
-						<td><a href="">Aktenzeichen</a></td>
-						<td class="text-center"><i class="fa fa-check"></i></td>
-					</tr>
-				</tbody>
-
-			</table>
-
-		</div>
-	</div>
-
-	<!--
-	<div class="row marketing">
-		<div class="col-md-6">
-			<h4>Subheading</h4>
-			<p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-		</div>
-
-		<div class="col-md-6">
-			<h4>Subheading</h4>
-			<p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-		</div>
-	</div>
-	-->
-
-	<footer class="footer">
-		<p>© CaseChain 2017</p>
-	</footer>
+		</tbody>
+	</table>
 
 </div>
-
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-<script src="{% static  "main/js/bootstrap.min.js" %}"></script>
-<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="{% static  "main/js/ie10-viewport-bug-workaround.js" %}></script>
-
-</body>
-</html>
+{% endblock %}
