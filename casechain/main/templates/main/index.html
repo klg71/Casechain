@@ -53,6 +53,15 @@
 			{{ case.plaintiff }}
 
 			<table class="table table-sm table-hover table-striped">
+  <ul>
+    {% for case in cases %}
+      <li>
+        {{ case.id }} {{ case.plaintiff }}
+      </li>
+    {% endfor %}
+  </ul>
+
+
 
 				<thead>
 					<tr>

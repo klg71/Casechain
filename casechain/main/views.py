@@ -10,9 +10,13 @@ from django.http.response import HttpResponse
 
 class CaseViews:
 
+    def viewCases(self,request):
+        cases = models.Case.objects.filter()
+        return render(request, 'main/index.html', {'cases': cases})
+
     def viewCase(self,request,case_id=None):
         case = models.Case.objects.get(id=case_id)
-        return render(request,'main/index.html',{'case': case})
+        return render(request,'main/item.html',{'case': case})
 
     def addText(self,request):
         """
