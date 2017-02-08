@@ -16,7 +16,17 @@ class CaseViews:
 
     def viewCase(self,request,case_id=None):
         case = models.Case.objects.get(id=case_id)
-        return render(request,'main/item.html',{'case': case})
+        verdictList = models.Verdict.objects.filter(case_id=case_id)
+        statementOfFactsId = models.StatementOfFacts.objects.filter(case_id=case_id).values('id')
+        factList = models.Fact.objects.filter(statementOfFacts_id=statementOfFactsId)
+        viewList = models.View.objects.filter(statementOfFacts_id=statementOfFactsId)
+        consensusList = models.Consenus.objects.filter(statementOfFacts_id=statementOfFactsId)
+        return render(request,'main/test.html',{
+            'case': case,
+            'verdicts': verdictList,
+            'views': viewList,
+            'facts': factList
+        })
 
     def addText(self,request):
         """
@@ -24,12 +34,21 @@ class CaseViews:
         """
         pass
 
+    def getCaseForm(self,request):
+        return render(request, 'main/new.html')
+
 
     def addCase(self,request):
-        """
-        Adds a new case to the chain
-        """
-        pass
+        # case = models.Case(
+        #     date=request.POST['date'],
+        #     court=request.POST['court'],
+        #     plaintiff=request.POST['plaintiff'],
+        #     defendant=request.POST['defendant'],
+        #   hashValue= get that shit
+        #   preHashValue= get that shit as well
+        #   nonce = get that shit also
+        )
+        return render(request,'main/item.html')
 
     def receiveCase(self,request):
         """
