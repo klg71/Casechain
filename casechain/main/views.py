@@ -45,16 +45,25 @@ class CaseViews:
                              prevHashValue=caseJson['prevHashValue'],
                              nonce=caseJson['nonce']
                              )
+            
             if string(hashLib.calculateHash(case)) != string(caseJson['hashValue']):
                 error="sha256 hash incorrect"
                 return HttpResponse(json.dumps({'error':error}))
     
 
+    def __checkNewCase(self,CaseObj,Verdicts,StatementOfFacts,Facts,Consenus,Views):
+        if CaseObj.hash!=hash.calculateHashNoId(CaseObj,Verdicts,StatementOfFacts,Facts,Consenus,Views):
+            return False
+        return __checkCase(CaseObj.id-1)
+
     def __checkCase(self,case_id):
         cases=Case.objects.filter(id<=case_id)
         for case in cases:
+            if case.id!=Case.objects.get(id=case_id-1).id:
+                return False
             if case.hash != hash.calculateHash(case_id):
                 return False
+        return True
 
 
 
