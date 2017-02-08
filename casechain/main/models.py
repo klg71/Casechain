@@ -3,15 +3,44 @@ from django.db import models
 # Create your models here.
 
 class Case(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    court = models.CharField(max_length=100)
+    plaintiff = models.CharField(max_length=100)
+    defendant = models.CharField(max_length=100)
     hashValue=models.CharField(max_length=100)
     prevHashValue=models.CharField(max_length=100)
     nonce=models.CharField(max_length=5)
 
-class Text(models.Model):
-    textType=models.CharField("max_length=10")
-    part=models.IntegerField()
-    case=models.ForeignKey('Case')
+class Verdict(models.Model):
+    verdict_types = (
+        ('in', 'intermediate'),
+        ('end', 'end'),
+    )
+    #enum field mit End, Zwischen
+    verdict_type=models.CharField(max_length=20,choices=verdict_type)
     text=models.CharField(max_length=1000)
 
-#class Verdict(models.Model):
+
+class StatementOfFacts(models.Model):
+    case=models.ForeignKey('Case')    
+
+class Facts(models.Model):
+    fact=models.CharField(max_length=1000)
+    statementOfFacts=models.ForeignKey('StatementOfFacts')
+
+class Consenus(models.Model):
+    opinion=models.CharField(max_length=1000)
+    statementOfFacts=models.ForeignKey('StatementOfFacts')
+
+
+class Views(models.Model):
+    viewer_types = (
+        ('pl', 'plaintiff'),
+        ('df', 'defendant'),
+    )
+    viewer=models.CharField(max_length=20,choices=viewer_type)
+    view=models.CharField(max_length=1000)
+    statementOfFacts=models.ForeignKey('StatementOfFacts')
+
+
 
