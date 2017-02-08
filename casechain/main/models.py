@@ -25,7 +25,7 @@ class Verdict(models.Model):
 class StatementOfFacts(models.Model):
     case=models.ForeignKey('Case')    
 
-class Facts(models.Model):
+class Fact(models.Model):
     fact=models.CharField(max_length=1000)
     statementOfFacts=models.ForeignKey('StatementOfFacts')
 
@@ -34,7 +34,7 @@ class Consenus(models.Model):
     statementOfFacts=models.ForeignKey('StatementOfFacts')
 
 
-class Views(models.Model):
+class View(models.Model):
     viewer_types = (
         ('pl', 'plaintiff'),
         ('df', 'defendant'),
