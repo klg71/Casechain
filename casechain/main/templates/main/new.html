@@ -1,0 +1,94 @@
+{% extends "main/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="col-sm-12">
+
+	<h1 class="margin-bottom-2">Neues Urteil anlegen</h1>
+
+	<section class="margin-bottom-2">
+
+		<form>
+
+			<div class="form-group">
+				<label for="date">Datum</label>
+				<input class="form-control" type="date" value="2011-08-19" id="date">
+			</div>
+
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="caseFile">Aktenzeichen</label>
+						<input type="text" class="form-control" id="caseFile" placeholder="Aktenzeichen">
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="court">Gericht</label>
+						<input type="text" class="form-control" id="court" placeholder="Gericht">
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="plaintiff">Klägerin</label>
+						<input type="text" class="form-control" id="plaintiff" placeholder="Klägerin">
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="defendant">Beklagte</label>
+						<input type="text" class="form-control" id="defendant" placeholder="Beklagte">
+					</div>
+				</div>
+			</div>
+
+			<fieldset class="form-group">
+				<legend>Urteile</legend>
+				<div class="form-group">
+					<label for="verdict1">Endurteil</label>
+					<textarea class="form-control" id="verdict1" rows="3"></textarea>
+				</div>
+				<div class="form-group">
+					<label for="verdict2">Zwischenurteil</label>
+					<textarea class="form-control" id="verdict2" rows="3"></textarea>
+				</div>
+			</fieldset>
+
+			<fieldset class="form-group">
+				<legend>Sichtweisen</legend>
+				<div class="form-group">
+					<label for="viewPlaintiff">Sichtweise Kläger</label>
+					<textarea class="form-control" id="viewPlaintiff" rows="3"></textarea>
+				</div>
+				<div class="form-group">
+					<label for="viewDefendant">Sichtweise Beklagte</label>
+					<textarea class="form-control" id="viewDefendant" rows="3"></textarea>
+				</div>
+			</fieldset>
+
+			<fieldset class="form-group">
+				<legend>Fakten</legend>
+				<div class="form-group">
+					<label for="fact1">Fakten 1</label>
+					<textarea class="form-control" id="fact1" rows="3"></textarea>
+				</div>
+				<div class="form-group">
+					<label for="fact2">Fakten 2</label>
+					<textarea class="form-control" id="fact2" rows="3"></textarea>
+				</div>
+			</fieldset>
+
+			<div class="submit-container margin-top-2">
+				<button type="submit" class="btn btn-primary">Urteil anlegen</button> <a href="/test" class="btn btn-link">zurück</a>
+			</div>
+		</form>
+
+	</section>
+
+</div>
+
+<div class="col-sm-12 margin-top-2 margin-bottom-2">
+
+</div>
+{% endblock content %}
