@@ -17,7 +17,7 @@ class Verdict(models.Model):
         ('end', 'end'),
     )
     #enum field mit End, Zwischen
-    verdict_type=models.CharField(max_length=20,choices=verdict_type)
+    verdict_type=models.CharField(max_length=20,choices=verdict_types)
     text=models.CharField(max_length=1000)
 
 
@@ -38,7 +38,7 @@ class Views(models.Model):
         ('pl', 'plaintiff'),
         ('df', 'defendant'),
     )
-    viewer=models.CharField(max_length=20,choices=viewer_type)
+    viewer=models.CharField(max_length=20,choices=viewer_types)
     view=models.CharField(max_length=1000)
     statementOfFacts=models.ForeignKey('StatementOfFacts')
 

@@ -1,16 +1,18 @@
 from django.shortcuts import render
-from models import Case
+from . import models
 import hashlib
 
 # Create your views here.
 
 class CaseViews:
 
+
+    
     def viewCase(self,request):
         """
         View Specific case
         """
-        pass
+        return render(request,'main/index.html')
 
     def addText(self,request):
         """
