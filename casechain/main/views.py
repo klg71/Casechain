@@ -6,13 +6,9 @@ import hashlib
 
 class CaseViews:
 
-
-    
-    def viewCase(self,request):
-        """
-        View Specific case
-        """
-        return render(request,'main/index.html')
+    def viewCase(self,request,case_id=None):
+        case = models.Case.objects.get(id=case_id)
+        return render(request,'main/index.html',{'case': case})
 
     def addText(self,request):
         """
