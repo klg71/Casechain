@@ -10,5 +10,6 @@ urlpatterns = [
         url(r'^add$', mainView.getCaseForm),
         url(r'^create$',mainView.addCase),
         url(r'^import$',csrf_exempt(mainView.receiveCase)),
+        url(r'^search$',mainView.searchCase),
 ]
 
