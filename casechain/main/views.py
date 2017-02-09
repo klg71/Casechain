@@ -17,13 +17,22 @@ class CaseViews:
 
     def viewCases(self,request):
         cases = models.Case.objects.filter()
+        isChainHealthy = False
         casesDict=[model_to_dict(x) for x in cases]
         for case,origCase in zip(casesDict,cases):
             case['date']=origCase.date
             case['status']=self.__checkCase(case['id'])
             case['hashValue']=case['hashValue'][:5]
+            if self.__checkCase():
+                isChainHealthy = True
+            else:
+                isChainHealthy = False
 
-        return render(request, 'main/index.html', {'cases': casesDict})
+
+        return render(request, 'main/index.html', {
+            'cases': casesDict,
+            'isChainHealthy': isChainHealthy
+        })
 
     def viewCase(self,request,case_id=None):
         case = models.Case.objects.get(id=case_id)
@@ -33,19 +42,24 @@ class CaseViews:
         factList = models.Fact.objects.filter(statementOfFacts_id=statementOfFactsId)
         viewList = models.View.objects.filter(statementOfFacts_id=statementOfFactsId)
         consensusList = models.Consenus.objects.filter(statementOfFacts_id=statementOfFactsId)
+        isChainHealthy = self.__checkCase(case['id'])
         
         return render(request,'main/item.html',{
             'case': case,
             'intVerdicts': intVerdictList,
             'endVerdict':endVerdict,
+            'consensusList': consensusList,
             'views': viewList,
-            'facts': factList
+            'facts': factList,
+            'isChainHealthy': isChainHealthy
         })
 
 
     def getCaseForm(self,request):
         return render(request, 'main/new.html')
 
+    def getSearchCaseForm(self,request):
+        return render(request, 'main/search.html')
 
     def addCase(self,request):
         if 'submit' in request.POST:
@@ -112,7 +126,6 @@ class CaseViews:
             return redirect('/test')
             print(hash.calculateHashNoId(case,verdicts,facts,consenuses,views))
 
-
     def receiveCase(self,request):
         """
         Method to receive a case from other nodes
@@ -138,7 +151,6 @@ class CaseViews:
             if string(hashLib.calculateHash(case)) != string(caseJson['hashValue']):
                 error="sha256 hash incorrect"
                 return HttpResponse(json.dumps({'error':error}))
-    
 
     def __checkNewCase(self,CaseObj,Verdicts,StatementOfFacts,Facts,Consenuses,Views):
         if CaseObj.hash!=hash.calculateHashNoId(CaseObj,Verdicts,StatementOfFacts,Facts,Consenuses,Views):
