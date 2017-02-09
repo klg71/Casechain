@@ -22,18 +22,29 @@
 	</section>
 
 	<section class="margin-bottom-2">
-		<h2>Urteil(e)</h2>
+		<h2>Zwischenurteil(e)</h2>
 		<ul class="list-group">
-			<li class="list-group-item">Urteil 1</li>
-			<li class="list-group-item">Urteil 1</li>
+      {% for verdict in intVerdicts %}
+      <li class="list-group-item">{{ verdict.text }}
+      
+      </li>
+      {% endfor %}
 		</ul>
 	</section>
 
 	<section class="margin-bottom-2">
+		<h2>Endurteil</h2>
+		<ul class="list-group">
+      <li class="list-group-item">{{ endVerdict.text }}  
+      </li>
+		</ul>
+	</section>
+	<section class="margin-bottom-2">
 		<h2>Fakten</h2>
 		<ul class="list-group">
-			<li class="list-group-item">Fakt</li>
-			<li class="list-group-item">Fakten</li>
+      {% for fact in facts %}
+      <li class="list-group-item">{{ fact.fact }}</li>
+      {% endfor %}
 		</ul>
 	</section>
 

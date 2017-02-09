@@ -12,6 +12,7 @@
 				<th>Datum</th>
 				<th>Gericht</th>
 				<th>Aktenzeichen</th>
+        <th>Hash</th>
 				<th class="text-center">BlockStatus</th>
 			</tr>
 		</thead>
@@ -22,7 +23,13 @@
 				<td>{{ case.date }}</td>
 				<td>{{ case.court }}</td>
 				<td><a href="./{{ case.id }}">{{ case.caseFile }}</a></td>
-				<td class="text-center"><i class="fa fa-chain text-success"></i>/<i class="fa fa-chain-broken text-danger"></i></td>
+				<td>{{ case.hashValue }}</td>
+				<td class="text-center">
+        {% if case.status %}
+          <i class="fa fa-chain text-success"></i>
+        {% else %}
+          <i class="fa fa-chain-broken text-danger"></i></td>
+        {% endif %}
 			</tr>
 			{% endfor %}
 

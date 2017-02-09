@@ -16,37 +16,37 @@ def calculateHash (case_id):
     # insert hash of data
     hash.update(bytes(caseToString(case), "utf-8"))
 
-    print(hash.hexdigest())
 
     return hash.hexdigest()
 
-def calculateHashNoId (case, verdicts, statementOfFacts, facts, consensuses, views):
+def calculateHashNoId (case, verdicts, facts, consensuses, views):
     # create sha256 object
     hash = hashlib.sha256()
     # insert hash of data
-    hash.update(bytes(caseToStringNoId(case, verdicts, statementOfFacts, facts, consensuses, views), "utf-8"))
+    hash.update(bytes(caseToStringNoId(case, verdicts, facts, consensuses, views), "utf-8"))
 
-    print(hash.hexdigest())
 
     return hash.hexdigest()
 
 def caseToString (case):
 
-    case_as_string = repr(case.date) + repr(case.court) + repr(case.plaintiff) + repr(case.defendant) + repr(case.nonce)\
-                     + factsToString(case) + consensusesToString(case) + viewsToString(case) +\
-                     verdictsToString(case)
+    case_as_string = repr(case.date) + repr(case.court) + repr(case.plaintiff) + repr(case.defendant) + repr(case.nonce) + repr(case.prevHashValue)  \
+                     + factsToString(case) + consensusesToString(case) + viewsToString(case) \
+                     + verdictsToString(case)
 
-    print(case_as_string)
+    with open('withid.txt'+repr(case.court),'w') as f:
+        f.write(case_as_string)
 
     return case_as_string
 
-def caseToStringNoId (case, verdicts, statementOfFacts, facts, consensuses, views):
+def caseToStringNoId (case, verdicts, facts, consensuses, views):
 
-    case_as_string = repr(case.date) + repr(case.court) + repr(case.plaintiff) + repr(case.defendant) + repr(case.nonce)\
+    case_as_string = repr(case.date) + repr(case.court) + repr(case.plaintiff) + repr(case.defendant) + repr(case.nonce) + repr(case.prevHashValue)\
                      + factsToStringNoId(facts) + consensusesToStringNoId(consensuses) + viewsToStringNoId(views) +\
                      verdictsToStringNoId(verdicts)
 
-    print(case_as_string)
+    with open('withoutid.txt','w') as f:
+        f.write(case_as_string)
 
     return case_as_string
 
@@ -84,29 +84,18 @@ def consensusesToStringNoId (consensuses):
 
 def viewsToString (case):
     sof = StatementOfFacts.objects.get(case=case.id)
-    views = View.objects.filter(statementOfFacts=case.id)
-    plaintiff_string = ""
-    defendant_string = ""
+    views = View.objects.filter(statementOfFacts=sof.id)
+    view_string = ""
     for view in views:
-        if view.viewer_types == "plaintiff":
-            plaintiff_string = plaintiff_string + view.view +'\n'
-        else:
-            defendant_string = defendant_string + view.view +'\n'
-
-    view_string = plaintiff_string + defendant_string
+        view_string = view_string+view.viewer + view.view +'\n'
 
     return view_string
 
 def viewsToStringNoId (views):
-    plaintiff_string = ""
-    defendant_string = ""
+    view_string = ""
     for view in views:
-        if view.viewer_types == "plaintiff":
-            plaintiff_string = plaintiff_string + view.view +'\n'
-        else:
-            defendant_string = defendant_string + view.view +'\n'
+        view_string = view_string+view.viewer + view.view +'\n'
 
-    view_string = plaintiff_string + defendant_string
 
     return view_string
 

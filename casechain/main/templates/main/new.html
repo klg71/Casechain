@@ -9,36 +9,36 @@
 
 	<section class="margin-bottom-2">
 
-		<form>
-
+		<form method="post" action="/test/create">
+      {% csrf_token %}
 			<div class="form-group">
 				<label for="date">Datum</label>
-				<input class="form-control" type="date" value="2011-08-19" id="date">
+				<input class="form-control" type="date" name="date" value="2011-08-19" id="date">
 			</div>
 
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="form-group">
 						<label for="caseFile">Aktenzeichen</label>
-						<input type="text" class="form-control" id="caseFile" placeholder="Aktenzeichen">
+						<input type="text" class="form-control" id="caseFile" name="caseFile" placeholder="Aktenzeichen">
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="form-group">
 						<label for="court">Gericht</label>
-						<input type="text" class="form-control" id="court" placeholder="Gericht">
+						<input type="text" class="form-control" id="court" name="court" placeholder="Gericht">
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="form-group">
 						<label for="plaintiff">Klägerin</label>
-						<input type="text" class="form-control" id="plaintiff" placeholder="Klägerin">
+						<input type="text" class="form-control" id="plaintiff" name="plaintiff" placeholder="Klägerin">
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="form-group">
 						<label for="defendant">Beklagte</label>
-						<input type="text" class="form-control" id="defendant" placeholder="Beklagte">
+						<input type="text" class="form-control" id="defendant" name="defendant" placeholder="Beklagte">
 					</div>
 				</div>
 			</div>
@@ -47,11 +47,12 @@
 				<legend>Urteile</legend>
 				<div class="form-group">
 					<label for="verdict1">Endurteil</label>
-					<textarea class="form-control" id="verdict1" rows="3"></textarea>
+					<textarea class="form-control" id="verdict1" name="verdictEnd" rows="3"></textarea>
 				</div>
+        <input type="hidden" name="int_verdict_len" value="1">
 				<div class="form-group">
 					<label for="verdict2">Zwischenurteil</label>
-					<textarea class="form-control" id="verdict2" rows="3"></textarea>
+					<textarea class="form-control" id="verdict2" name="verdictInt1" rows="3"></textarea>
 				</div>
 			</fieldset>
 
@@ -59,28 +60,37 @@
 				<legend>Sichtweisen</legend>
 				<div class="form-group">
 					<label for="viewPlaintiff">Sichtweise Kläger</label>
-					<textarea class="form-control" id="viewPlaintiff" rows="3"></textarea>
+					<textarea class="form-control" id="viewPlaintiff" name="viewPlaintiff" rows="3"></textarea>
 				</div>
 				<div class="form-group">
 					<label for="viewDefendant">Sichtweise Beklagte</label>
-					<textarea class="form-control" id="viewDefendant" rows="3"></textarea>
+					<textarea class="form-control" id="viewDefendant" name="viewDefendant" rows="3"></textarea>
 				</div>
 			</fieldset>
 
+       <input type="hidden" name="fact_len" value="2">
 			<fieldset class="form-group">
 				<legend>Fakten</legend>
 				<div class="form-group">
 					<label for="fact1">Fakten 1</label>
-					<textarea class="form-control" id="fact1" rows="3"></textarea>
+					<textarea class="form-control" id="fact1" name="fact1" rows="3"></textarea>
 				</div>
 				<div class="form-group">
 					<label for="fact2">Fakten 2</label>
-					<textarea class="form-control" id="fact2" rows="3"></textarea>
+					<textarea class="form-control" id="fact2" name="fact2" rows="3"></textarea>
 				</div>
 			</fieldset>
 
+       <input type="hidden" name="consenus_len" value="1">
+			<fieldset class="form-group">
+				<legend>Konsens</legend>
+				<div class="form-group">
+					<label for="consenus1">Konsens1</label>
+					<textarea class="form-control" id="consenus1" name="consenus1" rows="3"></textarea>
+				</div>
+			</fieldset>
 			<div class="submit-container margin-top-2">
-				<button type="submit" class="btn btn-primary">Urteil anlegen</button> <a href="/test" class="btn btn-link">zurück</a>
+				<button type="submit" class="btn btn-primary" name="submit">Urteil anlegen</button> <a href="/test" class="btn btn-link">zurück</a>
 			</div>
 		</form>
 
