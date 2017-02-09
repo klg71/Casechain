@@ -3,13 +3,15 @@ from django.shortcuts import redirect
 from . import models
 from .models import Verdict,Case,Fact,View,Consenus,StatementOfFacts
 from . import hash
+from . import json_export
 import hashlib
 import json
 from django.http.response import HttpResponse
 import random
 import string
 from django.forms.models import model_to_dict
-
+import requests
+import socket
 
 # Create your views here.
 
@@ -122,9 +124,16 @@ class CaseViews:
             for consenus in consenuses:
                 consenus.statementOfFacts=sof
                 consenus.save()
+            
+            jsonCase=json_export.exportCase(case.id)
+            print(jsonCase)
+
+            with open("clients.txt","r") as f:
+                for client in f.readlines():
+                    if not request.get_host() in socket.gethostname(): 
+                        r = requests.post(client+":8000/test/import", data={'case':json_export.exportCase(case.id)}) 
 
             return redirect('/test')
-            print(hash.calculateHashNoId(case,verdicts,facts,consenuses,views))
 
     def receiveCase(self,request):
         """
@@ -146,9 +155,34 @@ class CaseViews:
                                 case=verdictJson['case'],
                                 verdict_type=verdictJson['verdict_type'])
                 verdicts.append(verdict)
+            views=[]
+            for viewJson in caseJson['views']:
+                view=View(
+                            viewer=viewJson['viewer'],
+                            view=viewJson['view'],
+                            statementOfFacts=viewJon['sof']
+                            )
+                views.append(view)
+            facts=[]
+            for factJson in caseJson['facts']:
+                fact=Fact(
+                            fact=factJson['fact'],
+                            statementOfFacts=factJson['sof']
+                            )
+                facts.append(fact)
+                            
             StatementOfFacts=StatementOfFacts(case=caseJson['sof']['case'],id=caseJson['sof']['id'])
+            
+            consenuses = []
+            for consenusJson in caseJson['consenuses']:
+                consenus=Consenus(
+                            opinion=consenusJson['opinion'],
+                            statementOfFacts=consenusJson['sof']
+                        )
+                consenuses.append(consenus)
 
-            if string(hashLib.calculateHash(case)) != string(caseJson['hashValue']):
+
+            if string(hashLib.calculateHashNoId(case,verdicts,StatementOfFacts,facts,consenuses,views)) != string(caseJson['hashValue']):
                 error="sha256 hash incorrect"
                 return HttpResponse(json.dumps({'error':error}))
 
@@ -162,7 +196,6 @@ class CaseViews:
         if caseObj.hashValue != hash.calculateHash(case_id):
             return False
         cases=list(Case.objects.filter(id__lt=case_id))
-        print("check old")
         for case in cases:
 
             print(case.id)

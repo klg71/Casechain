@@ -22,14 +22,15 @@ def exportCase(case_id):
     case_export["hash"] = case.hashValue
     case_export["prevhash"] = case.prevHashValue
     case_export["nonce"] = case.nonce
+    case_export["id"]=case.id
 
-    case_export["statementOfFacts"] = {"case" : sof.case}
+    case_export["statementOfFacts"] = {"case" : sof.case.id}
 
     case_export["facts"] = []
     fact = {}
     for fact_ in facts:
         fact["fact"] = fact_.fact
-        fact["statementOfFacts"] = fact_.statementOfFacts
+        fact["statementOfFacts"] = fact_.statementOfFacts.id
         case_export["facts"].append(fact)
 
     case_export["views"] = []
@@ -37,14 +38,14 @@ def exportCase(case_id):
     for view_ in views:
         view["viewer"] = view_.viewer
         view["view"] = view_.view
-        view["statementOfFacts"] = view_.statementOfFacts
+        view["statementOfFacts"] = view_.statementOfFacts.id
         case_export["views"].append(view)
 
     case_export["consensuses"] = []
     consensus = {}
     for consensus_ in consensuses:
         consensus["opinion"] = consensus_.opinion
-        consensus["statementOfFacts"] = consensus_.statementOfFacts
+        consensus["statementOfFacts"] = consensus_.statementOfFacts.id
         case_export["consensuses"].append(consensus)
 
     case_export ["verdicts"] = []
@@ -52,7 +53,7 @@ def exportCase(case_id):
     for verdict_ in verdicts:
         verdict["type"] = verdict_.verdict_type
         verdict["text"] = verdict_.text
-        verdict["case"] = verdict_.case
+        verdict["case"] = verdict_.case.id
         case_export ["verdicts"].append(verdict)
 
     return json.dumps(case_export)
