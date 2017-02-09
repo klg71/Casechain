@@ -60,8 +60,22 @@ class CaseViews:
     def getCaseForm(self,request):
         return render(request, 'main/new.html')
 
-    def getSearchCaseForm(self,request):
-        return render(request, 'main/search.html')
+    def searchCase(self,request):
+        queryString = request.GET.__getitem__('query')
+        resultlist = []
+        print(queryString)
+        cases = models.Case.objects.all()
+        casesDict = [model_to_dict(x) for x in cases]
+        for case in casesDict:
+            for key,value in case.items():
+                if queryString in str(value):
+                    resultlist.append(case)
+
+
+        return render(request, 'main/searchResults.html', {
+            'results': resultlist,
+            'queryString': queryString
+        })
 
     def addCase(self,request):
         if 'submit' in request.POST:
