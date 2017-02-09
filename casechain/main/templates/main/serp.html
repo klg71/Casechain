@@ -1,0 +1,56 @@
+{% extends "main/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="col-sm-12">
+
+	<h1 class="">
+		Suche
+		{% if isChainHealthy == True %}
+		<span class="pull-right text-success small"><i class="fa fa-chain"></i> Blockchain intakt</span>
+		{% else %}
+		<span class="pull-right text-danger small"><i class="fa fa-chain-broken"></i> Blockchain korrumpiert</span>
+		{% endif %}
+	</h1>
+
+	{% if isChainHealthy == False %}
+	<div class="alert alert-danger text-center">
+		<i class="fa fa-warning"></i> Achtung! Die Blockchain wurde korrumpiert!
+	</div>
+	{% endif %}
+
+	<table class="table table-sm table-hover table-striped margin-top-2">
+		<thead>
+			<tr>
+				<th>Datum</th>
+				<th>Gericht</th>
+				<th>Aktenzeichen</th>
+				<th>Hash</th>
+				<th class="text-center">Status</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			{% for case in cases %}
+			<tr>
+				<td>{{ case.date }}</td>
+				<td>{{ case.court }}</td>
+				<td>
+					<a href="./{{ case.id }}">{{ case.caseFile }}</a>
+				</td>
+				<td>{{ case.hashValue }}</td>
+				<td class="text-center">
+					{% if case.status %}
+					<i class="fa fa-chain text-success"></i>
+					{% else %}
+					<i class="fa fa-chain-broken text-danger"></i></td>
+				{% endif %}
+			</tr>
+			{% endfor %}
+
+		</tbody>
+	</table>
+
+</div>
+{% endblock %}
