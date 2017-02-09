@@ -140,16 +140,13 @@ class CaseViews:
                 consenus.save()
             
             jsonCase=json_export.exportCase(case.id)
-            with open("export.json","w") as f:
-                f.write(jsonCase)
-            print(jsonCase)
 
-            #with open("clients.txt","r") as f:
-            #    for client in f.readlines():
-            #        if not request.get_host() in socket.gethostname():
-            #            print("send to: "+client)
-            #            r = requests.post(client+":8000/test/import", data={'case':json_export.exportCase(case.id)}) 
-
+            with open("clients.txt","r") as f:
+                for client in f.readlines():
+                    if not request.get_host() in socket.gethostname():
+                        print("send to: "+client)
+                        r = requests.post(client+"/test/import", data={'case':json_export.exportCase(case.id)}) 
+            
             return redirect('/test')
 
     def receiveCase(self,request):
