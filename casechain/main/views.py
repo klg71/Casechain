@@ -21,7 +21,7 @@ class CaseViews:
         factList = models.Fact.objects.filter(statementOfFacts_id=statementOfFactsId)
         viewList = models.View.objects.filter(statementOfFacts_id=statementOfFactsId)
         consensusList = models.Consenus.objects.filter(statementOfFacts_id=statementOfFactsId)
-        return render(request,'main/test.html',{
+        return render(request,'main/item.html',{
             'case': case,
             'verdicts': verdictList,
             'views': viewList,
@@ -29,18 +29,21 @@ class CaseViews:
         })
 
 
+    def getCaseForm(self,request):
+        return render(request, 'main/new.html')
+
 
     def addCase(self,request):
-        case = models.Case(
-            date=request.POST['date'],
-            court=request.POST['court'],
-            plaintiff=request.POST['plaintiff'],
-            defendant=request.POST['defendant'],
+        # case = models.Case(
+        #     date=request.POST['date'],
+        #     court=request.POST['court'],
+        #     plaintiff=request.POST['plaintiff'],
+        #     defendant=request.POST['defendant'],
         #   hashValue= get that shit
         #   preHashValue= get that shit as well
         #   nonce = get that shit also
-        )
-        pass
+        # )
+        return render(request,'main/item.html')
 
     def receiveCase(self,request):
         """

@@ -3,22 +3,61 @@
 {% load static %}
 
 {% block content %}
-
 <div class="col-sm-12">
 
-	<h1>Datum / Gericht / Aktzenzeichen</h1>
+	<h1 class="margin-bottom-2">{{ case.date }}, {{ case.court }}, {{ case.caseFile }}</h1>
 
+	<section class="margin-bottom-2">
+		<h2>Fallinformationen</h2>
+		<table class="table table-sm margin-bottom-3">
+			<tr>
+				<td>Klägering</td>
+				<td>{{ case.plaintiff }}</td>
+			</tr>
+			<tr>
+				<td>Beklagte</td>
+				<td>{{ case.defendant }}</td>
+			</tr>
+		</table>
+	</section>
 
--
-{{ verdicts }}
--
-{{ case.plaintiff }}
+	<section class="margin-bottom-2">
+		<h2>Urteil(e)</h2>
+		<ul class="list-group">
+			<li class="list-group-item">Urteil 1</li>
+			<li class="list-group-item">Urteil 1</li>
+		</ul>
+	</section>
 
+	<section class="margin-bottom-2">
+		<h2>Fakten</h2>
+		<ul class="list-group">
+			<li class="list-group-item">Fakt</li>
+			<li class="list-group-item">Fakten</li>
+		</ul>
+	</section>
+
+	<section class="margin-bottom-2">
+		<h2>Blockchain</h2>
+		<table class="table table-sm margin-bottom-4">
+			<tr>
+				<td>Hash</td>
+				<td>{{ case.hashValue }}</td>
+			</tr>
+			<tr>
+				<td>Prev-Hash</td>
+				<td>{{ case.prevHashValue }}</td>
+			</tr>
+			<tr>
+				<td>Nonce</td>
+				<td>{{ case.nonce }}</td>
+			</tr>
+		</table>
+	</section>
 
 </div>
 
 <div class="col-sm-12 margin-top-2 margin-bottom-2">
-	<a href=".." class="btn btn-primary">zurück</a>
+	<a href="/test" class="btn btn-primary">zurück</a>
 </div>
-
 {% endblock content %}
