@@ -5,3 +5,5 @@ with*
 __pycache__
 .idea
 *.scssc
+workspace.xml
+withid*
