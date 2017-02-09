@@ -6,6 +6,7 @@ from .models import Consenus
 from .models import View
 from .models import StatementOfFacts
 
+
 def calculateHash (case_id):
 
     # get a specific case
@@ -30,7 +31,7 @@ def calculateHashNoId (case, verdicts, facts, consensuses, views):
 
 def caseToString (case):
 
-    case_as_string = repr(case.date) + repr(case.court) + repr(case.plaintiff) + repr(case.defendant) + repr(case.nonce) + repr(case.prevHashValue)  \
+    case_as_string = repr(case.date) + repr(case.court) + repr(case.plaintiff) + repr(case.defendant) + repr(case.nonce) + repr(case.prevHashValue) + repr(case.caseFile) \
                      + factsToString(case) + consensusesToString(case) + viewsToString(case) \
                      + verdictsToString(case)
 
@@ -41,9 +42,10 @@ def caseToString (case):
 
 def caseToStringNoId (case, verdicts, facts, consensuses, views):
 
-    case_as_string = repr(case.date) + repr(case.court) + repr(case.plaintiff) + repr(case.defendant) + repr(case.nonce) + repr(case.prevHashValue)\
+    case_as_string = repr(case.date) + repr(case.court) + repr(case.plaintiff) + repr(case.defendant) + repr(case.nonce) + repr(case.prevHashValue) + repr(case.caseFile)\
                      + factsToStringNoId(facts) + consensusesToStringNoId(consensuses) + viewsToStringNoId(views) +\
                      verdictsToStringNoId(verdicts)
+    print(case_as_string)
 
     with open('withoutid.txt','w') as f:
         f.write(case_as_string)

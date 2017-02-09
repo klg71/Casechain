@@ -11,7 +11,7 @@ def exportCase(case_id):
     sof = StatementOfFacts.objects.get(case=case.id)
     facts = Fact.objects.filter(statementOfFacts=sof.id)
     consensuses = Consenus.objects.filter(statementOfFacts=sof.id)
-    views = View.objects.filter(statementOfFacts=case.id)
+    views = View.objects.filter(statementOfFacts=sof.id)
     verdicts = Verdict.objects.filter(case=case.id)
 
     case_export = {}
@@ -20,6 +20,7 @@ def exportCase(case_id):
     case_export["plaintiff"] = case.plaintiff
     case_export["dependent"] = case.defendant
     case_export["hash"] = case.hashValue
+    case_export["case_file"]=case.caseFile
     case_export["prevhash"] = case.prevHashValue
     case_export["nonce"] = case.nonce
     case_export["id"]=case.id
@@ -27,15 +28,15 @@ def exportCase(case_id):
     case_export["statementOfFacts"] = {"case" : sof.case.id}
 
     case_export["facts"] = []
-    fact = {}
     for fact_ in facts:
+        fact={}
         fact["fact"] = fact_.fact
         fact["statementOfFacts"] = fact_.statementOfFacts.id
         case_export["facts"].append(fact)
 
     case_export["views"] = []
-    view = {}
     for view_ in views:
+        view={}
         view["viewer"] = view_.viewer
         view["view"] = view_.view
         view["statementOfFacts"] = view_.statementOfFacts.id

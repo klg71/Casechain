@@ -7,3 +7,4 @@ __pycache__
 *.scssc
 workspace.xml
 withid*
+export.json

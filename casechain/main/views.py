@@ -81,13 +81,13 @@ class CaseViews:
             views=[viewPlaintiff,viewDefendant]
 
             facts=[]
-            for i in range(1,int(request.POST['fact_len'])):
+            for i in range(1,int(request.POST['fact_len'])+1):
                 fact=Fact()
                 fact.fact=request.POST['fact'+str(i)]
                 facts.append(fact)
 
             consenuses=[]
-            for i in range(1,int(request.POST['consenus_len'])):
+            for i in range(1,int(request.POST['consenus_len'])+1):
                 consenus=Consenus()
                 consenus.opinion=request.POST['consenus'+str(i)]
                 consenuses.append(consenus)
@@ -126,12 +126,15 @@ class CaseViews:
                 consenus.save()
             
             jsonCase=json_export.exportCase(case.id)
+            with open("export.json","w") as f:
+                f.write(jsonCase)
             print(jsonCase)
 
-            with open("clients.txt","r") as f:
-                for client in f.readlines():
-                    if not request.get_host() in socket.gethostname(): 
-                        r = requests.post(client+":8000/test/import", data={'case':json_export.exportCase(case.id)}) 
+            #with open("clients.txt","r") as f:
+            #    for client in f.readlines():
+            #        if not request.get_host() in socket.gethostname():
+            #            print("send to: "+client)
+            #            r = requests.post(client+":8000/test/import", data={'case':json_export.exportCase(case.id)}) 
 
             return redirect('/test')
 
@@ -139,52 +142,69 @@ class CaseViews:
         """
         Method to receive a case from other nodes
         """
+        #if True:
         if 'case' in request.POST:
+            caseJson=None
+            #with open("export.json","r") as f:
+            #    caseJson=json.loads(f.read())
             caseJson=json.loads(request.POST['case'])
             case=models.Case(date=caseJson['date'],
                              court=caseJson['court'],
                              plaintiff=caseJson['plaintiff'],
-                             defendant=caseJson['defendant'],
-                             hashValue=caseJson['hashValue'],
-                             prevHashValue=caseJson['prevHashValue'],
+                             caseFile=caseJson['case_file'],
+                             defendant=caseJson['dependent'],
+                             hashValue=caseJson['hash'],
+                             prevHashValue=caseJson['prevhash'],
                              nonce=caseJson['nonce']
                              )
             verdicts=[]
             for verdictJson in caseJson['verdicts']:
                 verdict=Verdict(text=verdictJson['text'],
-                                case=verdictJson['case'],
-                                verdict_type=verdictJson['verdict_type'])
+                                verdict_type=verdictJson['type'])
                 verdicts.append(verdict)
             views=[]
             for viewJson in caseJson['views']:
                 view=View(
                             viewer=viewJson['viewer'],
                             view=viewJson['view'],
-                            statementOfFacts=viewJon['sof']
                             )
                 views.append(view)
             facts=[]
             for factJson in caseJson['facts']:
                 fact=Fact(
                             fact=factJson['fact'],
-                            statementOfFacts=factJson['sof']
                             )
                 facts.append(fact)
                             
-            StatementOfFacts=StatementOfFacts(case=caseJson['sof']['case'],id=caseJson['sof']['id'])
+            statementOfFacts=StatementOfFacts()
             
             consenuses = []
-            for consenusJson in caseJson['consenuses']:
+            for consenusJson in caseJson['consensuses']:
                 consenus=Consenus(
                             opinion=consenusJson['opinion'],
-                            statementOfFacts=consenusJson['sof']
                         )
                 consenuses.append(consenus)
 
-
-            if string(hashLib.calculateHashNoId(case,verdicts,StatementOfFacts,facts,consenuses,views)) != string(caseJson['hashValue']):
+            if str(hash.calculateHashNoId(case,verdicts,facts,consenuses,views)) != str(caseJson['hash']):
                 error="sha256 hash incorrect"
                 return HttpResponse(json.dumps({'error':error}))
+            case.save()
+            for verdict in verdicts:
+                verdict.case=case
+                verdict.save()
+            statementOfFacts.case=case
+            statementOfFacts.save()
+            for fact in facts:
+                fact.statementOfFacts=statementOfFacts
+                fact.save()
+            for view in views:
+                view.statementOfFacts=statementOfFacts
+                view.save()
+            for consenus in consenuses:
+                consenus.statementOfFacts=statementOfFacts
+                consenus.save()
+
+            return redirect ("/test")
 
     def __checkNewCase(self,CaseObj,Verdicts,StatementOfFacts,Facts,Consenuses,Views):
         if CaseObj.hash!=hash.calculateHashNoId(CaseObj,Verdicts,StatementOfFacts,Facts,Consenuses,Views):
