@@ -12,77 +12,73 @@
 		<form method="post" action="/test/create">
 			{% csrf_token %}
 			<div class="form-group">
-				<label for="date">Datum</label>
-				<input class="form-control" type="date" name="date" value="2011-08-19" id="date">
+				<label for="date">Datum <span class="text-danger">*</span></label>
+				<input class="form-control" type="date" name="date" value="2011-08-19" id="date" required="required">
 			</div>
 
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="form-group">
-						<label for="caseFile">Aktenzeichen</label>
-						<input type="text" class="form-control" id="caseFile" name="caseFile" placeholder="Aktenzeichen">
+						<label for="caseFile">Aktenzeichen <span class="text-danger">*</span></label>
+						<input type="text" class="form-control" id="caseFile" name="caseFile" placeholder="Aktenzeichen" required="required">
+					</div>
+					<div class="form-group">
+						<label for="court">Gericht <span class="text-danger">*</span></label>
+						<input type="text" class="form-control" id="court" name="court" placeholder="Gericht" required="required">
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="form-group">
-						<label for="court">Gericht</label>
-						<input type="text" class="form-control" id="court" name="court" placeholder="Gericht">
+						<label for="plaintiff">Klägerin <span class="text-danger">*</span></label>
+						<input type="text" class="form-control" id="plaintiff" name="plaintiff" placeholder="Klägerin" required="required">
 					</div>
-				</div>
-				<div class="col-sm-6">
 					<div class="form-group">
-						<label for="plaintiff">Klägerin</label>
-						<input type="text" class="form-control" id="plaintiff" name="plaintiff" placeholder="Klägerin">
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="form-group">
-						<label for="defendant">Beklagte</label>
-						<input type="text" class="form-control" id="defendant" name="defendant" placeholder="Beklagte">
+						<label for="defendant">Beklagte <span class="text-danger">*</span></label>
+						<input type="text" class="form-control" id="defendant" name="defendant" placeholder="Beklagte" required="required">
 					</div>
 				</div>
 			</div>
 
-			<fieldset class="form-group">
-				<legend>Urteile</legend>
-				<div class="form-group">
-					<label for="verdict1">Endurteil</label>
-					<textarea class="form-control" id="verdict1" name="verdictEnd" rows="3"></textarea>
-				</div>
+			<fieldset class="form-group margin-top-2">
+				<!-- <legend>Urteile</legend>-->
 				<input type="hidden" name="int_verdict_len" value="1">
 				<div class="form-group">
+					<label for="verdict1">Tenor <span class="text-danger">*</span></label>
+					<textarea class="form-control" id="verdict1" name="verdictEnd" rows="3" required="required"></textarea>
+				</div>
+				<div class="form-group hidden-xs-up">
 					<label for="verdict2">Zwischenurteil</label>
 					<textarea class="form-control" id="verdict2" name="verdictInt1" rows="3"></textarea>
 				</div>
 			</fieldset>
 
 			<fieldset class="form-group">
-				<legend>Sichtweisen</legend>
+				<!--<legend>Fakten</legend>-->
+				<input type="hidden" name="fact_len" value="2">
 				<div class="form-group">
-					<label for="viewPlaintiff">Sichtweise Kläger</label>
-					<textarea class="form-control" id="viewPlaintiff" name="viewPlaintiff" rows="3"></textarea>
+					<label for="fact1">Tatbestand <span class="text-danger">*</span></label>
+					<textarea class="form-control" id="fact1" name="fact1" rows="3" required="required"></textarea>
 				</div>
-				<div class="form-group">
-					<label for="viewDefendant">Sichtweise Beklagte</label>
-					<textarea class="form-control" id="viewDefendant" name="viewDefendant" rows="3"></textarea>
-				</div>
-			</fieldset>
-
-       <input type="hidden" name="fact_len" value="2">
-			<fieldset class="form-group">
-				<legend>Fakten</legend>
-				<div class="form-group">
-					<label for="fact1">Fakten 1</label>
-					<textarea class="form-control" id="fact1" name="fact1" rows="3"></textarea>
-				</div>
-				<div class="form-group">
+				<div class="form-group hidden-xs-up">
 					<label for="fact2">Fakten 2</label>
 					<textarea class="form-control" id="fact2" name="fact2" rows="3"></textarea>
 				</div>
 			</fieldset>
 
-       <input type="hidden" name="consenus_len" value="1">
 			<fieldset class="form-group">
+				<!--<legend>Sichtweisen</legend>-->
+				<div class="form-group">
+					<label for="viewPlaintiff">Gründe <span class="text-danger">*</span></label>
+					<textarea class="form-control" id="viewPlaintiff" name="viewPlaintiff" rows="3" required="required"></textarea>
+				</div>
+				<div class="form-group hidden-xs-up">
+					<label for="viewDefendant">Sichtweise Beklagte</label>
+					<textarea class="form-control" id="viewDefendant" name="viewDefendant" rows="3"></textarea>
+				</div>
+			</fieldset>
+
+			<input type="hidden" name="consenus_len" value="1">
+			<fieldset class="form-group hidden-xs-up">
 				<legend>Konsens</legend>
 				<div class="form-group">
 					<label for="consenus1">Konsens1</label>
