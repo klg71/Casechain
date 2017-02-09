@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Case(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.CharField(max_length=20)
     court = models.CharField(max_length=100)
     plaintiff = models.CharField(max_length=100)
     defendant = models.CharField(max_length=100)
@@ -24,7 +24,7 @@ class Verdict(models.Model):
 
 
 class StatementOfFacts(models.Model):
-    case=models.ForeignKey('Case')    
+    case=models.ForeignKey('Case')  
 
 class Fact(models.Model):
     fact=models.CharField(max_length=1000)

@@ -1,9 +1,14 @@
 from django.shortcuts import render
+from django.shortcuts import redirect
 from . import models
+from .models import Verdict,Case,Fact,View,Consenus,StatementOfFacts
 from . import hash
 import hashlib
 import json
 from django.http.response import HttpResponse
+import random
+import string
+from django.forms.models import model_to_dict
 
 
 # Create your views here.
@@ -12,43 +17,101 @@ class CaseViews:
 
     def viewCases(self,request):
         cases = models.Case.objects.filter()
-        return render(request, 'main/index.html', {'cases': cases})
+        casesDict=[model_to_dict(x) for x in cases]
+        for case,origCase in zip(casesDict,cases):
+            case['date']=origCase.date
+            case['status']=self.__checkCase(case['id'])
+            case['hashValue']=case['hashValue'][:5]
+
+        return render(request, 'main/index.html', {'cases': casesDict})
 
     def viewCase(self,request,case_id=None):
         case = models.Case.objects.get(id=case_id)
-        verdictList = models.Verdict.objects.filter(case_id=case_id)
-        statementOfFactsId = models.StatementOfFacts.objects.filter(case_id=case_id).values('id')
+        intVerdictList = models.Verdict.objects.filter(case_id=case_id,verdict_type='in')
+        endVerdict=models.Verdict.objects.get(case_id=case_id,verdict_type="end")
+        statementOfFactsId = models.StatementOfFacts.objects.get(case_id=case_id).id
         factList = models.Fact.objects.filter(statementOfFacts_id=statementOfFactsId)
         viewList = models.View.objects.filter(statementOfFacts_id=statementOfFactsId)
         consensusList = models.Consenus.objects.filter(statementOfFacts_id=statementOfFactsId)
+        
         return render(request,'main/item.html',{
             'case': case,
-            'verdicts': verdictList,
+            'intVerdicts': intVerdictList,
+            'endVerdict':endVerdict,
             'views': viewList,
             'facts': factList
         })
 
-    def addText(self,request):
-        """
-        Adds a Text to a case
-        """
-        pass
 
     def getCaseForm(self,request):
         return render(request, 'main/new.html')
 
 
     def addCase(self,request):
-        # case = models.Case(
-        #     date=request.POST['date'],
-        #     court=request.POST['court'],
-        #     plaintiff=request.POST['plaintiff'],
-        #     defendant=request.POST['defendant'],
-        #   hashValue= get that shit
-        #   preHashValue= get that shit as well
-        #   nonce = get that shit also
-        # )
-        return render(request,'main/item.html')
+        if 'submit' in request.POST:
+            endVerdict=Verdict(verdict_type="end")
+            endVerdict.text=request.POST['verdictEnd']
+            verdicts=[endVerdict]
+            for i in range(1,int(request.POST['int_verdict_len'])):
+                intVerdict=Verdict(verdict_type="in")
+                intVerdict.text=request.POST['verdictInt'+str(i)]
+                verdicts.append(intVerdict)
+
+            viewPlaintiff=View(viewer='pl')
+            viewPlaintiff.view=request.POST['viewPlaintiff']
+            
+            viewDefendant=View(viewer='df')
+            viewDefendant.view=request.POST['viewDefendant']
+            views=[viewPlaintiff,viewDefendant]
+
+            facts=[]
+            for i in range(1,int(request.POST['fact_len'])):
+                fact=Fact()
+                fact.fact=request.POST['fact'+str(i)]
+                facts.append(fact)
+
+            consenuses=[]
+            for i in range(1,int(request.POST['consenus_len'])):
+                consenus=Consenus()
+                consenus.opinion=request.POST['consenus'+str(i)]
+                consenuses.append(consenus)
+            
+            case = models.Case(
+                 date=request.POST['date'],
+                 court=request.POST['court'],
+                 plaintiff=request.POST['plaintiff'],
+                 defendant=request.POST['defendant'],
+                 caseFile=request.POST['caseFile']
+            )
+            prevHashCase=Case.objects.filter().last()
+            prevHash=""
+            if prevHashCase==None:
+                prevHash="0000000000000000000000000000000000000000000000000000000000000000"
+            else:
+                prevHash=prevHashCase.hashValue
+            case.prevHashValue=prevHash
+            case.nonce=''.join(random.choice(string.digits) for  _ in range(5))
+            caseHash=hash.calculateHashNoId(case,verdicts,facts,consenuses,views)
+            case.hashValue=caseHash
+            case.save()
+            for verdict in verdicts:
+                verdict.case=case
+                verdict.save()
+            sof=StatementOfFacts(case=case)
+            sof.save()
+            for view in views:
+                view.statementOfFacts=sof
+                view.save()
+            for fact in facts:
+                fact.statementOfFacts=sof
+                fact.save()
+            for consenus in consenuses:
+                consenus.statementOfFacts=sof
+                consenus.save()
+
+            return redirect('/test')
+            print(hash.calculateHashNoId(case,verdicts,facts,consenuses,views))
+
 
     def receiveCase(self,request):
         """
@@ -64,27 +127,38 @@ class CaseViews:
                              prevHashValue=caseJson['prevHashValue'],
                              nonce=caseJson['nonce']
                              )
+            verdicts=[]
+            for verdictJson in caseJson['verdicts']:
+                verdict=Verdict(text=verdictJson['text'],
+                                case=verdictJson['case'],
+                                verdict_type=verdictJson['verdict_type'])
+                verdicts.append(verdict)
+            StatementOfFacts=StatementOfFacts(case=caseJson['sof']['case'],id=caseJson['sof']['id'])
+
             if string(hashLib.calculateHash(case)) != string(caseJson['hashValue']):
                 error="sha256 hash incorrect"
                 return HttpResponse(json.dumps({'error':error}))
     
 
+    def __checkNewCase(self,CaseObj,Verdicts,StatementOfFacts,Facts,Consenuses,Views):
+        if CaseObj.hash!=hash.calculateHashNoId(CaseObj,Verdicts,StatementOfFacts,Facts,Consenuses,Views):
+            return False
+        return __checkCase(CaseObj.id-1)
+
     def __checkCase(self,case_id):
-        cases=Case.objects.filter(id<=case_id)
+        caseObj=Case.objects.get(id=case_id)
+        if caseObj.hashValue != hash.calculateHash(case_id):
+            return False
+        cases=list(Case.objects.filter(id__lt=case_id))
+        print("check old")
         for case in cases:
-            if case.hash != hash.calculateHash(case_id):
+
+            print(case.id)
+            if case.hashValue != hash.calculateHash(case.id):
+                print(case.hashValue)
+                print(hash.calculateHash(case_id))
                 return False
+        return True
 
 
-
-    def __createHashValue(self,caseId):
-        """
-        Calculates Hash Value for given case
-        """
-        hashSha265=hashlib.sha256()
-        case=Case.objects.get(id=caseId)
-        hashSha265.update(bytes(case.nonce,"utf-8"))
-        texts=Text.objects.filter(case=case.id)
-        for text in texts:
-            hashSha265.update(text.text)
 

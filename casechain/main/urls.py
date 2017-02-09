@@ -8,5 +8,6 @@ urlpatterns = [
         url(r'^$', mainView.viewCases),
         url(r'^([0-9]+)/$', mainView.viewCase),
         url(r'^add$', mainView.getCaseForm),
+        url(r'^create$',mainView.addCase),
 ]
 
