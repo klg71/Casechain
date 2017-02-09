@@ -145,7 +145,7 @@ class CaseViews:
                 for client in f.readlines():
                     if not request.get_host() in socket.gethostname():
                         print("send to: "+client)
-                        r = requests.post(client+"/test/import", data={'case':json_export.exportCase(case.id)}) 
+                        r = requests.post('http://'+client+"/test/import", data={'case':json_export.exportCase(case.id)}) 
             
             return redirect('/test')
 
