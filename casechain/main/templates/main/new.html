@@ -10,7 +10,7 @@
 	<section class="margin-bottom-2">
 
 		<form method="post" action="/test/create">
-      {% csrf_token %}
+			{% csrf_token %}
 			<div class="form-group">
 				<label for="date">Datum</label>
 				<input class="form-control" type="date" name="date" value="2011-08-19" id="date">
@@ -49,7 +49,7 @@
 					<label for="verdict1">Endurteil</label>
 					<textarea class="form-control" id="verdict1" name="verdictEnd" rows="3"></textarea>
 				</div>
-        <input type="hidden" name="int_verdict_len" value="1">
+				<input type="hidden" name="int_verdict_len" value="1">
 				<div class="form-group">
 					<label for="verdict2">Zwischenurteil</label>
 					<textarea class="form-control" id="verdict2" name="verdictInt1" rows="3"></textarea>
