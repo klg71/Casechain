@@ -144,8 +144,12 @@ class CaseViews:
             with open("clients.txt","r") as f:
                 for client in f.readlines():
                     if not request.get_host() in socket.gethostname():
+                        new_client=client
+                        if '\n' in client:
+                            new_client=client.replace('\r','')
+                            new_client=client.replace('\n','')
                         print("send to: "+client)
-                        r = requests.post('http://'+client+"/test/import", data={'case':json_export.exportCase(case.id)}) 
+                        r = requests.post("http://"+new_client+"/test/import", data={'case':json_export.exportCase(case.id)}) 
             
             return redirect('/test')
 
