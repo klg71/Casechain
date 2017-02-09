@@ -23,7 +23,7 @@ class CaseViews:
             case['date']=origCase.date
             case['status']=self.__checkCase(case['id'])
             case['hashValue']=case['hashValue'][:5]
-            if self.__checkCase():
+            if self.__checkCase(case['id']):
                 isChainHealthy = True
             else:
                 isChainHealthy = False
@@ -42,7 +42,7 @@ class CaseViews:
         factList = models.Fact.objects.filter(statementOfFacts_id=statementOfFactsId)
         viewList = models.View.objects.filter(statementOfFacts_id=statementOfFactsId)
         consensusList = models.Consenus.objects.filter(statementOfFacts_id=statementOfFactsId)
-        isChainHealthy = self.__checkCase(case['id'])
+        isChainHealthy = self.__checkCase(case.id)
         
         return render(request,'main/item.html',{
             'case': case,
