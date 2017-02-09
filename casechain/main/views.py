@@ -28,11 +28,6 @@ class CaseViews:
             'facts': factList
         })
 
-    def addText(self,request):
-        """
-        Adds a Text to a case
-        """
-        pass
 
 
     def addCase(self,request):
@@ -61,14 +56,21 @@ class CaseViews:
                              prevHashValue=caseJson['prevHashValue'],
                              nonce=caseJson['nonce']
                              )
-            
+            verdicts=[]
+            for verdictJson in caseJson['verdicts']:
+                verdict=Verdict(text=verdictJson['text'],
+                                case=verdictJson['case'],
+                                verdict_type=verdictJson['verdict_type'])
+                verdicts.append(verdict)
+            StatementOfFacts=StatementOfFacts(case=caseJson['sof']['case'],id=caseJson['sof']['id'])
+
             if string(hashLib.calculateHash(case)) != string(caseJson['hashValue']):
                 error="sha256 hash incorrect"
                 return HttpResponse(json.dumps({'error':error}))
     
 
-    def __checkNewCase(self,CaseObj,Verdicts,StatementOfFacts,Facts,Consenus,Views):
-        if CaseObj.hash!=hash.calculateHashNoId(CaseObj,Verdicts,StatementOfFacts,Facts,Consenus,Views):
+    def __checkNewCase(self,CaseObj,Verdicts,StatementOfFacts,Facts,Consenuses,Views):
+        if CaseObj.hash!=hash.calculateHashNoId(CaseObj,Verdicts,StatementOfFacts,Facts,Consenuses,Views):
             return False
         return __checkCase(CaseObj.id-1)
 
@@ -82,15 +84,4 @@ class CaseViews:
         return True
 
 
-
-    def __createHashValue(self,caseId):
-        """
-        Calculates Hash Value for given case
-        """
-        hashSha265=hashlib.sha256()
-        case=Case.objects.get(id=caseId)
-        hashSha265.update(bytes(case.nonce,"utf-8"))
-        texts=Text.objects.filter(case=case.id)
-        for text in texts:
-            hashSha265.update(text.text)
 
