@@ -5,7 +5,16 @@
 {% block content %}
 <div class="col-sm-12">
 
-	<h1 class="margin-bottom-2">{{ case.date }}, {{ case.court }}, {{ case.caseFile }}</h1>
+	{% if isChainHealthy == True %}
+	<p class="text-success"><i class="fa fa-chain"></i> Blockchain intakt</p>
+	{% else %}
+	<p class="text-danger"><i class="fa fa-chain-broken"></i> Blockchain korrumpiert</p>
+	{% endif %}
+
+	<h1 class="margin-bottom-2">
+		{{ case.date }}, {{ case.court }}, {{ case.caseFile }}
+
+	</h1>
 
 	<section class="margin-bottom-2">
 		<h2>Fallinformationen</h2>
